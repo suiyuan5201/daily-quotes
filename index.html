@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>每日一句 - 名言励志语录 | Daily Quotes</title>
+  <meta name="description" content="每日一句名言励志语录，中英文双语，每天自动更新，分享正能量。Daily inspirational quotes in Chinese and English.">
+  <meta name="keywords" content="每日一句,名言,励志,语录,鸡汤,正能量,daily quotes,inspirational,motivational">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2030154790924322" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="logo">✨ 每日一句 DailyQuotes</a>
+  </nav>
+
+  <div class="container">
+    <div class="quote-card" id="quoteCard">
+      <div class="quote-mark">"</div>
+      <div class="quote-text" id="quoteText"></div>
+      <div class="quote-author" id="quoteAuthor"></div>
+      <div class="quote-en" id="quoteEn"></div>
+    </div>
+
+    <div class="actions">
+      <button class="action-btn" onclick="nextQuote()">🔄 换一句 Next</button>
+      <button class="action-btn" onclick="copyQuote()">📋 复制 Copy</button>
+      <button class="action-btn" onclick="shareQuote()">📤 分享 Share</button>
+      <button class="action-btn" onclick="likeQuote()">❤️ <span id="likeCount">0</span></button>
+    </div>
+
+    <div class="category-section">
+      <h2>分类 Categories</h2>
+      <div class="cat-tabs" id="catTabs">
+        <span class="cat-tab active" onclick="setCat('all',this)">全部 All</span>
+        <span class="cat-tab" onclick="setCat('motivation',this)">励志 Motivation</span>
+        <span class="cat-tab" onclick="setCat('life',this)">人生 Life</span>
+        <span class="cat-tab" onclick="setCat('love',this)">爱情 Love</span>
+        <span class="cat-tab" onclick="setCat('wisdom',this)">智慧 Wisdom</span>
+        <span class="cat-tab" onclick="setCat('funny',this)">幽默 Funny</span>
+        <span class="cat-tab" onclick="setCat('success',this)">成功 Success</span>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <h2>今日精选 Today's Picks</h2>
+      <div class="history-grid" id="historyGrid"></div>
+    </div>
+
+    <div class="ad-placeholder">广告位 - Google AdSense</div>
+  </div>
+
+  <footer class="footer">每日一句 DailyQuotes © 2024 | 每天一点正能量</footer>
+
+  <script>
+  const QUOTES=[
+    {zh:"生活就像一盒巧克力，你永远不知道下一颗是什么味道。",en:"Life is like a box of chocolates. You never know what you're gonna get.",author:"阿甘正传 Forrest Gump",cat:"life"},
+    {zh:"不要等待机会，而要创造机会。",en:"Don't wait for opportunities, create them.",author:"萧伯纳 George Bernard Shaw",cat:"motivation"},
+    {zh:"成功不是终点，失败也不是终结，唯有继续前行的勇气才是最重要的。",en:"Success is not final, failure is not fatal: it is the courage to continue that counts.",author:"丘吉尔 Winston Churchill",cat:"success"},
+    {zh:"在困难之中蕴含着机遇。",en:"In the middle of difficulty lies opportunity.",author:"爱因斯坦 Albert Einstein",cat:"wisdom"},
+    {zh:"你的时间有限，不要浪费在过别人的生活上。",en:"Your time is limited, don't waste it living someone else's life.",author:"乔布斯 Steve Jobs",cat:"life"},
+    {zh:"做伟大工作的唯一方法就是热爱你所做的事情。",en:"The only way to do great work is to love what you do.",author:"乔布斯 Steve Jobs",cat:"success"},
+    {zh:"千里之行，始于足下。",en:"A journey of a thousand miles begins with a single step.",author:"老子 Lao Tzu",cat:"wisdom"},
+    {zh:"生命中最重要的事情不是你遭遇了什么，而是你记住了什么。",en:"The most important thing in life is not what happens to you, but what you remember.",author:"马尔克斯 García Márquez",cat:"life"},
+    {zh:"世界上只有一种真正的英雄主义，那就是认清了生活的真相后依然热爱生活。",en:"There is only one heroism in the world: to see the world as it is, and to love it.",author:"罗曼·罗兰 Romain Rolland",cat:"motivation"},
+    {zh:"不是因为有希望才坚持，而是因为坚持才有希望。",en:"We don't persist because there is hope, but there is hope because we persist.",author:"佚名 Anonymous",cat:"motivation"},
+    {zh:"教育不是灌满一桶水，而是点燃一把火。",en:"Education is not the filling of a pail, but the lighting of a fire.",author:"叶芝 W.B. Yeats",cat:"wisdom"},
+    {zh:"爱情不是占有，而是欣赏。",en:"Love is not about possession, it's about appreciation.",author:"佚名 Anonymous",cat:"love"},
+    {zh:"最好的关系是：我懂你的不容易，你理解我的小脾气。",en:"The best relationship: I understand your struggles, you accept my moods.",author:"佚名 Anonymous",cat:"love"},
+    {zh:"人生没有白走的路，每一步都算数。",en:"No step in life is wasted, every single one counts.",author:"佚名 Anonymous",cat:"life"},
+    {zh:"真正的智慧是知道自己的无知。",en:"True wisdom is knowing that you know nothing.",author:"苏格拉底 Socrates",cat:"wisdom"},
+    {zh:"如果你想飞，就要放弃一切让你下沉的东西。",en:"If you want to fly, give up everything that weighs you down.",author:"佚名 Anonymous",cat:"motivation"},
+    {zh:"幽默是一种智慧的表现，它让严肃的事情变得有趣。",en:"Humor is the affectionate communication of insight.",author:"里奥·罗斯顿 Leo Rosten",cat:"funny"},
+    {zh:"我不是在逃避工作，我只是在等灵感。",en:"I'm not avoiding work, I'm just waiting for inspiration.",author:"佚名 Anonymous",cat:"funny"},
+    {zh:"成功就是从失败到失败，也不丧失热情。",en:"Success is going from failure to failure without losing enthusiasm.",author:"丘吉尔 Winston Churchill",cat:"success"},
+    {zh:"每一个不曾起舞的日子，都是对生命的辜负。",en:"Every day not spent dancing is a day wasted in life.",author:"尼采 Nietzsche",cat:"life"},
+    {zh:"所有的伟大都源自一个勇敢的开始。",en:"All greatness begins with a brave start.",author:"佚名 Anonymous",cat:"motivation"},
+    {zh:"人生最大的冒险就是从不冒险。",en:"The biggest risk in life is never taking one.",author:"马克·扎克伯格 Mark Zuckerberg",cat:"success"},
+    {zh:"最困难的时候，也就是离成功最近的时候。",en:"The darkest hour is just before the dawn.",author:"富勒 Thomas Fuller",cat:"motivation"},
+    {zh:"别人笑我太疯癫，我笑他人看不穿。",en:"They laugh at me for being different, I laugh at them for being the same.",author:"唐寅 Tang Yin",cat:"wisdom"},
+    {zh:"你不必很厉害才能开始，但你必须开始才能变厉害。",en:"You don't have to be great to start, but you have to start to be great.",author:"齐格·齐格勒 Zig Ziglar",cat:"motivation"},
+    {zh:"陪伴是最长情的告白。",en:"Being there is the most romantic declaration of love.",author:"佚名 Anonymous",cat:"love"},
+    {zh:"我能想到最浪漫的事，就是和你一起慢慢变老。",en:"The most romantic thing I can think of is growing old together with you.",author:"赵咏华",cat:"love"},
+    {zh:"人生就像骑自行车，想保持平衡就得往前走。",en:"Life is like riding a bicycle. To keep your balance, you must keep moving.",author:"爱因斯坦 Albert Einstein",cat:"life"},
+    {zh:"不要用别人的错误来惩罚自己。",en:"Don't punish yourself for other people's mistakes.",author:"佚名 Anonymous",cat:"wisdom"},
+    {zh:"我没有失败，我只是发现了一万种行不通的方法。",en:"I have not failed. I've just found 10,000 ways that won't work.",author:"爱迪生 Thomas Edison",cat:"success"},
+    {zh:"世上没有绝望的处境，只有对处境绝望的人。",en:"There are no hopeless situations, only people who are hopeless about them.",author:"佚名 Anonymous",cat:"motivation"},
+    {zh:"与其担心未来，不如现在好好努力。",en:"Instead of worrying about the future, work hard in the present.",author:"佚名 Anonymous",cat:"motivation"},
+    {zh:"你笑起来真好看，像春天的花一样。",en:"Your smile is so beautiful, like flowers in spring.",author:"佚名 Anonymous",cat:"love"},
+    {zh:"真正的强大不是从不害怕，而是害怕了还能继续前行。",en:"True strength is not never being afraid, but going forward despite the fear.",author:"佚名 Anonymous",cat:"motivation"},
+    {zh:"人生苦短，及时行乐。但也别忘了，人生苦短，及时努力。",en:"Life is short, enjoy it. But also remember: life is short, work hard.",author:"佚名 Anonymous",cat:"funny"},
+    {zh:"有些路看起来很近，走着走着就远了。有些路看起来很远，走着走着就到了。",en:"Some paths seem close but grow farther as you walk. Others seem far but arrive sooner than expected.",author:"佚名 Anonymous",cat:"wisdom"},
+    {zh:"把每一天当作生命的最后一天来过，有一天你会发现自己是对的。",en:"Live each day as if it were your last, and one day you'll be right.",author:"佚名 Anonymous",cat:"life"},
+    {zh:"我的钱包就像一个洋葱，每次打开都让我想哭。",en:"My wallet is like an onion, opening it makes me cry.",author:"佚名 Anonymous",cat:"funny"},
+    {zh:"早起的鸟儿有虫吃，早起的虫儿被鸟吃。",en:"The early bird catches the worm, but the early worm gets caught.",author:"佚名 Anonymous",cat:"funny"},
+    {zh:"知识就是力量，但更重要的是运用知识的智慧。",en:"Knowledge is power, but wisdom in applying knowledge is even more important.",author:"弗朗西斯·培根 Francis Bacon",cat:"wisdom"},
+  ];
+
+  let currentCat='all',currentIdx=0,likes=JSON.parse(localStorage.getItem('quote_likes')||'{}');
+
+  // 基于日期的种子随机
+  function getDayIdx(){
+    const today=new Date();
+    const seed=today.getFullYear()*10000+today.getMonth()*100+today.getDate();
+    return seed%QUOTES.length;
+  }
+
+  function getFilteredQuotes(){
+    return currentCat==='all'?QUOTES:QUOTES.filter(q=>q.cat===currentCat);
+  }
+
+  function showQuote(idx){
+    const list=getFilteredQuotes();
+    if(list.length===0)return;
+    currentIdx=idx%list.length;
+    const q=list[currentIdx];
+    document.getElementById('quoteText').textContent=q.zh;
+    document.getElementById('quoteAuthor').textContent='— '+q.author;
+    document.getElementById('quoteEn').textContent=q.en;
+    document.getElementById('likeCount').textContent=likes[q.zh]||0;
+    // 背景色随机
+    const colors=['linear-gradient(135deg,#667eea,#764ba2)','linear-gradient(135deg,#f093fb,#f5576c)','linear-gradient(135deg,#4facfe,#00f2fe)','linear-gradient(135deg,#43e97b,#38f9d7)','linear-gradient(135deg,#fa709a,#fee140)','linear-gradient(135deg,#a18cd1,#fbc2eb)'];
+    document.getElementById('quoteCard').style.background=colors[currentIdx%colors.length];
+  }
+
+  function nextQuote(){
+    currentIdx++;
+    showQuote(currentIdx);
+  }
+
+  function setCat(cat,el){
+    currentCat=cat;
+    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    showQuote(0);
+    renderHistory();
+  }
+
+  function copyQuote(){
+    const list=getFilteredQuotes();
+    const q=list[currentIdx%list.length];
+    const text=q.zh+'\n'+q.en+'\n— '+q.author;
+    navigator.clipboard.writeText(text).then(()=>showToast('已复制到剪贴板！Copied!'));
+  }
+
+  function shareQuote(){
+    const list=getFilteredQuotes();
+    const q=list[currentIdx%list.length];
+    if(navigator.share){
+      navigator.share({title:'每日一句',text:q.zh+' — '+q.author});
+    }else{copyQuote();}
+  }
+
+  function likeQuote(){
+    const list=getFilteredQuotes();
+    const q=list[currentIdx%list.length];
+    likes[q.zh]=(likes[q.zh]||0)+1;
+    localStorage.setItem('quote_likes',JSON.stringify(likes));
+    document.getElementById('likeCount').textContent=likes[q.zh];
+  }
+
+  function renderHistory(){
+    const list=getFilteredQuotes();
+    const today=new Date();
+    const seed=today.getFullYear()*10000+today.getMonth()*100+today.getDate();
+    // 每天显示5条不同的
+    const picks=[];
+    for(let i=0;i<5&&i<list.length;i++){
+      picks.push(list[(seed+i*7)%list.length]);
+    }
+    document.getElementById('historyGrid').innerHTML=picks.map(q=>`
+      <div class="history-card">
+        <p class="hc-text">"${q.zh}"</p>
+        <p class="hc-author">— ${q.author}</p>
+      </div>
+    `).join('');
+  }
+
+  function showToast(msg){
+    const t=document.createElement('div');
+    t.style.cssText='position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 24px;border-radius:25px;font-size:14px;z-index:9999;';
+    t.textContent=msg;document.body.appendChild(t);
+    setTimeout(()=>t.remove(),2500);
+  }
+
+  // Init
+  showQuote(getDayIdx());
+  renderHistory();
+  </script>
+</body>
+</html>
