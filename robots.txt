@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://daily-quotes-site.netlify.app/sitemap.xml
+Sitemap: https://voluble-daffodil-c70d44.netlify.app/sitemap.xml
